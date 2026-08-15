@@ -10,10 +10,11 @@ const MEAL_OPTIONS = MEALS;
  *   - initial        : 编辑时的已有 Dish（可选）
  *   - defaultMealType: 新增时的默认餐别 'breakfast' | 'lunch' | 'dinner'
  *   - eatenDate      : 新增时记录的就餐日期（YYYY-MM-DD）
+ *   - recipeMode     : true 表示「作为纯菜谱新建」（不记入今日用餐，eatenDate/eatenMeal 留空）
  *   - onCancel       : 取消回调
  *   - onSubmit       : 提交回调，接收组装好的完整 Dish 对象
  */
-export default function DishForm({ initial, defaultMealType = 'lunch', eatenDate = '', onCancel, onSubmit }) {
+export default function DishForm({ initial, defaultMealType = 'lunch', eatenDate = '', recipeMode = false, onCancel, onSubmit }) {
   const isEdit = Boolean(initial && initial.id);
   const [name, setName] = useState(initial?.name ?? '');
   const [mealType, setMealType] = useState(initial?.mealType ?? defaultMealType);
@@ -56,8 +57,8 @@ export default function DishForm({ initial, defaultMealType = 'lunch', eatenDate
       steps: steps.trim(),
       createdAt: initial?.createdAt || now,
       updatedAt: now,
-      eatenDate: initial?.eatenDate != null ? initial.eatenDate : eatenDate,
-      eatenMeal: initial?.eatenMeal != null && initial.eatenMeal !== '' ? initial.eatenMeal : mealType,
+      eatenDate: recipeMode ? '' : (initial?.eatenDate != null ? initial.eatenDate : eatenDate),
+      eatenMeal: recipeMode ? '' : (initial ? (initial.eatenMeal ?? '') : mealType),
     };
     try {
       await onSubmit(dish);
