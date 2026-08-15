@@ -4,15 +4,16 @@
  * 纯前端、零后端的本地数据层。所有数据通过 IndexedDB 永久存储在用户浏览器中。
  *
  * 数据模型 Dish：
- *   - id         : string  (crypto.randomUUID())
- *   - name       : string  (菜名)
- *   - mealType   : 'lunch' | 'dinner'  (中餐 / 晚餐)
- *   - image      : string  (压缩后的 base64 dataURL，可为空字符串)
- *   - steps      : string  (做法，多行文本)
- *   - createdAt  : string  (ISO 时间)
- *   - updatedAt  : string  (ISO 时间)
- *   - eatenDate  : string  (YYYY-MM-DD，记录当天所吃；可为空)
- *   - eatenMeal  : 'lunch' | 'dinner' | ''  (记录当餐别；可为空)
+ *   - id           : string  (crypto.randomUUID())
+ *   - name         : string  (菜名)
+ *   - mealType     : 'breakfast' | 'lunch' | 'dinner'  (早餐 / 中餐 / 晚餐)，详见 src/meals.js
+ *   - image        : string  (压缩后的 base64 dataURL，可为空字符串)
+ *   - ingredients  : string  (食材，多行文本，一行一个；可为空)
+ *   - steps        : string  (做法，多行文本)
+ *   - createdAt    : string  (ISO 时间)
+ *   - updatedAt    : string  (ISO 时间)
+ *   - eatenDate    : string  (YYYY-MM-DD，记录当天所吃；可为空)
+ *   - eatenMeal    : 'breakfast' | 'lunch' | 'dinner' | ''  (记录当餐别；可为空)
  *
  * 导出函数：
  *   openDB, getAll, put, del, bulkPut, clearAll, exportData, importData,

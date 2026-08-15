@@ -4,7 +4,8 @@ const TABS = [
   { key: 'today', label: '今日', icon: '🏠' },
   { key: 'library', label: '菜谱库', icon: '📖' },
   { key: 'random', label: '随机', icon: '🎲' },
-  { key: 'backup', label: '备份', icon: '💾' },
+  { key: 'stats', label: '统计', icon: '📊' },
+  { key: 'ingredients', label: '食材', icon: '🛒' },
 ];
 
 /**

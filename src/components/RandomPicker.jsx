@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getAll } from '../storage.js';
-
-const MEAL_LABEL = { lunch: '中餐', dinner: '晚餐' };
+import { MEALS, MEAL_LABEL } from '../meals.js';
 
 /**
  * 随机推荐（Tab3）：点击「今天吃什么」从菜谱库随机抽取一道菜；
@@ -10,7 +9,7 @@ const MEAL_LABEL = { lunch: '中餐', dinner: '晚餐' };
 export default function RandomPicker() {
   const [dishes, setDishes] = useState([]);
   const [filterByMeal, setFilterByMeal] = useState(false);
-  const [meal, setMeal] = useState('lunch');
+  const [meal, setMeal] = useState('breakfast');
   const [picked, setPicked] = useState(null);
   const [empty, setEmpty] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -56,16 +55,16 @@ export default function RandomPicker() {
         </label>
         {filterByMeal && (
           <div className="mt-2 flex gap-2">
-            {['lunch', 'dinner'].map((m) => (
+            {MEALS.map((m) => (
               <button
-                key={m}
+                key={m.key}
                 type="button"
-                onClick={() => setMeal(m)}
+                onClick={() => setMeal(m.key)}
                 className={`flex-1 rounded-lg py-1.5 text-sm ${
-                  meal === m ? 'bg-brand-500 text-white' : 'bg-stone-100 text-stone-500'
+                  meal === m.key ? 'bg-brand-500 text-white' : 'bg-stone-100 text-stone-500'
                 }`}
               >
-                {MEAL_LABEL[m]}
+                {m.label}
               </button>
             ))}
           </div>

@@ -3,12 +3,13 @@ import Nav from './components/Nav.jsx';
 import TodayView from './components/TodayView.jsx';
 import DishLibrary from './components/DishLibrary.jsx';
 import RandomPicker from './components/RandomPicker.jsx';
-import Backup from './components/Backup.jsx';
+import Statistics from './components/Statistics.jsx';
+import Ingredients from './components/Ingredients.jsx';
 
 /**
  * 应用根组件：管理底部 Tab 切换，并按当前 Tab 渲染对应模块。
  * 仅渲染当前激活的模块，切换 Tab 时会重新挂载，从而自动从 IndexedDB 重新拉取数据，
- * 保证今日视图、菜谱库、随机推荐之间的数据一致性（如新增菜品后立即在菜谱库可见）。
+ * 保证今日视图、菜谱库、随机推荐、统计、食材清单之间的数据一致性。
  */
 export default function App() {
   const [tab, setTab] = useState('today');
@@ -24,7 +25,8 @@ export default function App() {
           {tab === 'today' && <TodayView />}
           {tab === 'library' && <DishLibrary />}
           {tab === 'random' && <RandomPicker />}
-          {tab === 'backup' && <Backup />}
+          {tab === 'stats' && <Statistics />}
+          {tab === 'ingredients' && <Ingredients />}
         </main>
       </div>
 

@@ -1,17 +1,16 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { getAll, put, del } from '../storage.js';
+import { MEALS } from '../meals.js';
 import DishCard from './DishCard.jsx';
 import DishDetail from './DishDetail.jsx';
+import Backup from './Backup.jsx';
 
-const FILTERS = [
-  { key: 'all', label: '全部' },
-  { key: 'lunch', label: '中餐' },
-  { key: 'dinner', label: '晚餐' },
-];
+const FILTERS = [{ key: 'all', label: '全部' }, ...MEALS];
 
 /**
  * 菜谱库（Tab2）：展示全部历史菜品，可按餐别筛选；
- * 点击卡片进入详情（大图 + 菜名 + 做法），详情内可编辑 / 删除。
+ * 点击卡片进入详情（大图 + 菜名 + 食材 + 做法），详情内可编辑 / 删除。
+ * 页面底部内嵌「数据备份」模块（导出 / 导入 JSON）。
  */
 export default function DishLibrary() {
   const [dishes, setDishes] = useState([]);
@@ -82,6 +81,10 @@ export default function DishLibrary() {
           onClose={() => setSelected(null)}
         />
       )}
+
+      <div className="mt-8 border-t border-stone-200 pt-5">
+        <Backup />
+      </div>
     </div>
   );
 }

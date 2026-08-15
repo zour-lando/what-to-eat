@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import DishForm from './DishForm.jsx';
-
-const MEAL_LABEL = { lunch: '中餐', dinner: '晚餐' };
+import { MEAL_LABEL } from '../meals.js';
 
 /**
- * 菜品详情（模态层）：大图 + 菜名 + 做法全文。
+ * 菜品详情（模态层）：大图 + 菜名 + 做法 + 食材。
  * 支持「编辑」（复用 DishForm 预填）与「删除」（由父级 confirm）。
  * props:
  *   - dish    : Dish 对象
@@ -29,6 +28,10 @@ export default function DishDetail({ dish, onEdit, onDelete, onClose }) {
   }
 
   const hasImage = dish.image && dish.image.length > 0;
+  const ingredientLines = (dish.ingredients || '')
+    .split('\n')
+    .map((s) => s.trim())
+    .filter(Boolean);
 
   return (
     <div
@@ -62,6 +65,22 @@ export default function DishDetail({ dish, onEdit, onDelete, onClose }) {
               {MEAL_LABEL[dish.mealType] || '菜品'}
             </span>
           </div>
+
+          {ingredientLines.length > 0 && (
+            <div className="mt-4">
+              <h3 className="mb-2 text-sm font-medium text-stone-500">食材</h3>
+              <div className="flex flex-wrap gap-2">
+                {ingredientLines.map((ing, i) => (
+                  <span
+                    key={i}
+                    className="rounded-full bg-brand-50 px-2.5 py-1 text-xs text-brand-600"
+                  >
+                    {ing}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
 
           <h3 className="mb-1 mt-4 text-sm font-medium text-stone-500">做法</h3>
           {dish.steps ? (

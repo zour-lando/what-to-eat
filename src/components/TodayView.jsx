@@ -1,13 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { getAll, put, del, getTodayKey } from '../storage.js';
+import { MEALS } from '../meals.js';
 import DishCard from './DishCard.jsx';
 import DishForm from './DishForm.jsx';
 import DishDetail from './DishDetail.jsx';
-
-const MEALS = [
-  { key: 'lunch', label: '中餐' },
-  { key: 'dinner', label: '晚餐' },
-];
 
 /** 今日日期的人类可读展示，如「8月15日 周六」。 */
 function formatDate() {

@@ -1,16 +1,14 @@
 import React, { useState, useRef } from 'react';
 import { compressImage, uuid } from '../storage.js';
+import { MEALS } from '../meals.js';
 
-const MEAL_OPTIONS = [
-  { key: 'lunch', label: '中餐' },
-  { key: 'dinner', label: '晚餐' },
-];
+const MEAL_OPTIONS = MEALS;
 
 /**
  * 新增 / 编辑 共用的菜品表单（底部弹起的模态层）。
  * props:
  *   - initial        : 编辑时的已有 Dish（可选）
- *   - defaultMealType: 新增时的默认餐别 'lunch' | 'dinner'
+ *   - defaultMealType: 新增时的默认餐别 'breakfast' | 'lunch' | 'dinner'
  *   - eatenDate      : 新增时记录的就餐日期（YYYY-MM-DD）
  *   - onCancel       : 取消回调
  *   - onSubmit       : 提交回调，接收组装好的完整 Dish 对象
@@ -20,6 +18,7 @@ export default function DishForm({ initial, defaultMealType = 'lunch', eatenDate
   const [name, setName] = useState(initial?.name ?? '');
   const [mealType, setMealType] = useState(initial?.mealType ?? defaultMealType);
   const [steps, setSteps] = useState(initial?.steps ?? '');
+  const [ingredients, setIngredients] = useState(initial?.ingredients ?? '');
   const [image, setImage] = useState(initial?.image ?? '');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -53,6 +52,7 @@ export default function DishForm({ initial, defaultMealType = 'lunch', eatenDate
       name: name.trim(),
       mealType,
       image,
+      ingredients: ingredients.trim(),
       steps: steps.trim(),
       createdAt: initial?.createdAt || now,
       updatedAt: now,
@@ -159,6 +159,17 @@ export default function DishForm({ initial, defaultMealType = 'lunch', eatenDate
                 />
               </div>
             </div>
+          </div>
+
+          <div>
+            <label className="mb-1 block text-sm font-medium text-stone-600">食材（可选，一行一个）</label>
+            <textarea
+              value={ingredients}
+              onChange={(e) => setIngredients(e.target.value)}
+              rows={3}
+              placeholder={'每行写一个食材，例如：\n鸡蛋\n番茄\n葱'}
+              className="w-full resize-y rounded-lg border border-stone-200 px-3 py-2 text-stone-800 outline-none focus:border-brand-400"
+            />
           </div>
 
           <div>
