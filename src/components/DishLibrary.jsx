@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { getAll, put, del } from '../storage.js';
+import { getAll, put, del, uuid } from '../storage.js';
 import { MEALS } from '../meals.js';
 import DishCard from './DishCard.jsx';
 import DishDetail from './DishDetail.jsx';
@@ -53,6 +53,23 @@ export default function DishLibrary() {
     await load();
   }
 
+  // 复制为其它餐别：保留图/食材/做法，仅改餐别，并清空就餐日期（作为纯菜谱）
+  async function handleDuplicate(targetMeal) {
+    if (!selected) return;
+    const now = new Date().toISOString();
+    const copy = {
+      ...selected,
+      id: uuid(),
+      mealType: targetMeal,
+      eatenDate: '',
+      eatenMeal: '',
+      createdAt: now,
+      updatedAt: now,
+    };
+    await put(copy);
+    await load();
+  }
+
   // 新建时的默认餐别：跟随当前筛选（若正看某一餐别），否则默认中餐
   const addDefaultMeal = MEALS.some((m) => m.key === filter) ? filter : 'lunch';
 
@@ -98,6 +115,7 @@ export default function DishLibrary() {
           dish={selected}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          onDuplicate={handleDuplicate}
           onClose={() => setSelected(null)}
         />
       )}

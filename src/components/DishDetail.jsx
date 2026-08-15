@@ -1,18 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DishForm from './DishForm.jsx';
-import { MEAL_LABEL } from '../meals.js';
+import { MEALS, MEAL_LABEL } from '../meals.js';
 
 /**
  * 菜品详情（模态层）：大图 + 菜名 + 做法 + 食材。
- * 支持「编辑」（复用 DishForm 预填）与「删除」（由父级 confirm）。
+ * 支持「编辑」（复用 DishForm 预填）、「删除」（由父级 confirm）、
+ * 「复制为…」（一键复制成其它餐别的菜品，由父级 onDuplicate 负责入库）。
  * props:
- *   - dish    : Dish 对象
- *   - onEdit  : 编辑回调 (updatedDish) => Promise
- *   - onDelete: 删除回调 () => void（父级负责 confirm）
- *   - onClose : 关闭回调
+ *   - dish       : Dish 对象
+ *   - onEdit     : 编辑回调 (updatedDish) => Promise
+ *   - onDelete   : 删除回调 () => void（父级负责 confirm）
+ *   - onDuplicate: 复制为其它餐别回调 (targetMealType) => Promise
+ *   - onClose    : 关闭回调
  */
-export default function DishDetail({ dish, onEdit, onDelete, onClose }) {
+export default function DishDetail({ dish, onEdit, onDelete, onDuplicate, onClose }) {
   const [editing, setEditing] = useState(false);
+  const [pickOpen, setPickOpen] = useState(false);
+  const [toast, setToast] = useState('');
+
+  // 复制成功提示自动消失
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(''), 2200);
+    return () => clearTimeout(t);
+  }, [toast]);
+
+  // 可复制的目标餐别（排除当前餐别）
+  const targets = MEALS.filter((m) => m.key !== dish.mealType);
 
   if (editing) {
     return (
@@ -100,12 +114,47 @@ export default function DishDetail({ dish, onEdit, onDelete, onClose }) {
           </button>
           <button
             type="button"
+            onClick={() => setPickOpen((v) => !v)}
+            className="flex-1 rounded-lg border border-stone-200 py-2.5 text-stone-600"
+          >
+            复制为…
+          </button>
+          <button
+            type="button"
             onClick={onDelete}
             className="flex-1 rounded-lg bg-red-50 py-2.5 font-medium text-red-500"
           >
             删除
           </button>
         </div>
+
+        {pickOpen && (
+          <div className="border-t border-stone-100 bg-stone-50 px-4 py-3">
+            <p className="mb-2 text-xs text-stone-500">复制到哪个餐别？</p>
+            <div className="flex gap-2">
+              {targets.map((m) => (
+                <button
+                  key={m.key}
+                  type="button"
+                  onClick={async () => {
+                    setPickOpen(false);
+                    await onDuplicate(m.key);
+                    setToast(`已复制到${m.label}`);
+                  }}
+                  className="flex-1 rounded-lg bg-brand-500 py-2 text-sm text-white"
+                >
+                  {m.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {toast && (
+          <div className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black/75 px-4 py-2 text-sm text-white">
+            {toast}
+          </div>
+        )}
       </div>
     </div>
   );
